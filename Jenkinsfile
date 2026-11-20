@@ -1,35 +1,38 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'python:3.9-slim' } 
+    }
 
     stages {
         stage('Build') {
             steps {
-                echo 'Compilando / Preparando el código...'
-                sleep 5
+                echo 'Compilando / preparando entorno...'
+                sh 'pip install --upgrade pip'
             }
         }
         stage('Test') {
             steps {
-                echo 'Ejecutando pruebas básicas...'
-                sleep 5
+                echo 'Ejecutando pruebas...'
+                
             }
         }
         stage('Analyze') {
             steps {
-                echo 'Ejecutando análisis estático con SonarQube...'
-                sleep 5
+                echo 'Análisis de calidad de código...'
             }
         }
-        stage('Security Test') {
+        stage('Dependency Management') {
             steps {
-                echo 'Ejecutando OWASP Dependency-Check y OWASP ZAP...'
-                sleep 5
+                
+                sh 'pip install pipenv' 
+                sh 'pipenv install'
+                sh 'pipenv update'
+                sh 'pipenv graph'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Desplegando la aplicación en entorno de prueba...'
-                sleep 5
+                echo 'Desplegando aplicación en entorno de prueba (simulado)...'
             }
         }
     }
